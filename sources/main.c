@@ -8,6 +8,7 @@
 #include "../include/png_objects.h"
 #include "../include/read_write.h"
 #include "../include/print_help_info.h"
+// #include "../include/draw_line.h"
 
 int is_digit(char *line)
 {
@@ -28,6 +29,7 @@ int is_digit(char *line)
 int main(int argc, char *argv[])
 {
     printf("Course work for option 4.20, created by Alexander Korshkov\n");
+    
     struct option long_opt[] = {
         {"help", no_argument, NULL, 'h'},
         {"info", no_argument, NULL, '!'},
@@ -171,11 +173,11 @@ int main(int argc, char *argv[])
         case 'a':
         {
             char *axis = optarg;
-            if (axis == 'x')
+            if (axis == "x")
             {
                 mirror.axis = 'x';
             }
-            else if (axis == 'y')
+            else if (axis == "y")
             {
                 mirror.axis = 'y';
             }
