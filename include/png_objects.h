@@ -1,6 +1,6 @@
 #ifndef PNG_OBJECTS
 #define PNG_OBJECTS
-
+#include <png.h>
 struct Png
 {
     int width, height;
