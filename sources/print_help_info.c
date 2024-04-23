@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../include/png_objects.h"
 #include "../include/print_help_info.h"
