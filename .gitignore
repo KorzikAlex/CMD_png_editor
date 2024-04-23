@@ -1,9 +1,14 @@
+.idea
+.vscode
+
 Important Information
-include
-sources
-.Makefile
-a.out
+# include
+# sources
+test_code
+
+# Makefile
 output.png
-hello.png
-test.c
-test2.c
+
+coursework.out
+a.out
+*.o
