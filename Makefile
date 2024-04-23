@@ -1,16 +1,25 @@
-$(CC) = gcc
-$(CFLAGS) = -g -Wall
-$(LIBS) = -lpng
-$(SRC_DIR) = sources
-$(INCDIR) = include
-$(OBJDIR) = sources
+CC = gcc
+CFLAGS = -g -Werror -std=gnu99
+LIBS = -lpng
+SRCDIR = sources
+OBJDIR = objects
+INCDIR = include
 
-SOURCES := $(wildcard $(SRC_DIR)/*.c)
-OBJECTS := $(patsubst $(SRC_DIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
-EXECUTABLE := coursework
+SOURCES = $(wildcard $(SRCDIR)/*.c)
+OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
+EXECUTABLE = cw
 
-all:
-	$(CC) $(CXXFLAGS) $^ -o $@ $(LIBS)
+all: $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean_objects:
+	rm -rf $(OBJDIR)
 
 clean:
-	rm -r $(OBJDIR) $(EXECUTABLE)
+	rm -rf $(OBJDIR) $(EXECUTABLE)

@@ -12,3 +12,5 @@ output.png
 coursework.out
 a.out
 *.o
+.*.c
+.*.h
