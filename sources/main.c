@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         {"radius", required_argument, NULL, 'd'},
         {0, 0, 0, 0}};
 
-    struct info_file information;
+    info_file information;
     info_line line;
     info_mirror mirror;
     info_pentagram pentagram;
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         }
         case '!':
         {
-            printInfo(input_file, &input_image);
+            printInfo(information.input_file, &input_image);
             return 0;
         }
         case 'i':
