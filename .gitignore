@@ -10,7 +10,11 @@ test_code
 output.png
 
 coursework.out
+cw
+cw.out
+coursework
 a.out
+
 *.o
 .*.c
 .*.h
