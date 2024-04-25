@@ -5,6 +5,7 @@ Important Information
 # include
 # sources
 test_code
+objects
 
 # Makefile
 output.png
