@@ -258,7 +258,11 @@ int main(int argc, char *argv[])
         draw_line(line, input_image);
     }
     if (mirror.p == 1) {
-
+        draw_mirror(mirror, input_image);
     }
+    if (pentagram.p == 1) {
+        draw_pentagram(pentagram, input_image);
+    }
+    
     return 0;
 }
