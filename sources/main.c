@@ -283,16 +283,34 @@ int main(int argc, char *argv[])
         }
         else {
             printf("You don't specify all parameters!\n");
+            png_destroy_read_struct(&input_image->png_ptr, &input_image->info_ptr, NULL);
+            fclose(fp)
             exit(0);
         }
     }
     if (mirror.p == 1)
     {
-        draw_mirror(mirror, &input_image);
+        if (mirror.axis && mirror.x1 && mirror.y1 && mirror.x2 && mirror.y2) {
+            draw_mirror(mirror, &input_image);
+        }
+        else {
+            printf("You don't specify all parameters!\n");
+            png_destroy_read_struct(&input_image->png_ptr, &input_image->info_ptr, NULL);
+            fclose(fp);
+            exit(0);
+        }
     }
     if (pentagram.p == 1)
     {
-        draw_pentagram(pentagram, &input_image);
+        if (pentagram.radius && pentagram.thickness && pentagram.x && pentagram.y && pentagram.r && pentagram.g && pentagram.b) {
+            draw_pentagram(pentagram, &input_image);
+        } else {
+            printf("You don't specify all parameters!\n");
+            png_destroy_read_struct(&input_image->png_ptr, &input_image->info_ptr, NULL);
+            fclose(fp);
+            exit(0);
+        }
+        
     }
     write_png_file(information.output_file, &input_image);
     return 0;
