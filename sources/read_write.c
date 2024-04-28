@@ -26,19 +26,22 @@ void read_png_file(char *file_name, struct Png *image)
     if (!image->png_ptr)
     {
         printf("Error in png structure!\n");
+        fclose(fp);
         exit(0);
     }
     image->info_ptr = png_create_info_struct(image->png_ptr);
     if (!image->info_ptr)
     {
         printf("Error in png info-structure (information is broken)!\n");
-        png_destroy_read_struct(&image->png_ptr, &image->info_ptr, NULL);
+        png_destroy_read_struct(&image->png_ptr, NULL, NULL);
+        fclose(fp);
         exit(0);
     }
     if (setjmp(png_jmpbuf(image->png_ptr)))
     {
-        printf("error in png setjmp\n");
+        printf("Unknown Error!\n");
         png_destroy_read_struct(&image->png_ptr, &image->info_ptr, NULL);
+        fclose(fp);
         exit(0);
     }
 
@@ -74,41 +77,70 @@ void write_png_file(char *file_name, struct Png *image)
     if (!image->png_ptr)
     {
         printf("It\'s impossible to write the structure of file \"%s\"!\n", file_name);
+        fclose(fp);
         exit(0);
     }
     image->info_ptr = png_create_info_struct(image->png_ptr);
     if (!image->info_ptr)
     {
         printf("It\'s impossible to write the information of file \"%s\"!\n", file_name);
-        png_destroy_read_struct(&image->png_ptr, &image->info_ptr, NULL);
+        png_destroy_write_struct(&image->png_ptr, NULL);
+        fclose(fp);
         exit(0);
     }
     if (setjmp(png_jmpbuf(image->png_ptr)))
     {
+        png_destroy_write_struct(&image->png_ptr, &image->info_ptr);
+        fclose(fp);
+        exit(0);
     }
+
     png_init_io(image->png_ptr, fp);
-    if (setjmp(png_jmpbuf(image->png_ptr)))
-    {
-    }
     png_set_IHDR(image->png_ptr, image->info_ptr, image->width, image->height, image->bit_depth, image->color_type, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
     png_write_info(image->png_ptr, image->info_ptr);
     if (setjmp(png_jmpbuf(image->png_ptr)))
     {
-        // printf("Something went wrong!\n");
-        // free_png(image);
-        // exit(0);
+        png_destroy_write_struct(&image->png_ptr, &image->info_ptr);
+        fclose(fp);
+        exit(0);
     }
     png_write_image(image->png_ptr, image->row_pointers);
     if (setjmp(png_jmpbuf(image->png_ptr)))
     {
-        // printf("Something went wrong!\n");
-        // free_png(image);
-        // exit(0);
+        png_destroy_write_struct(&image->png_ptr, &image->info_ptr);
+        fclose(fp);
+        exit(0);
     }
     png_write_end(image->png_ptr, NULL);
     for (y = 0; y < image->height; y++)
         free(image->row_pointers[y]);
     free(image->row_pointers);
     fclose(fp);
+}
+
+void process_file(struct Png *image)
+{
+    int x, y;
+    if (png_get_color_type(image->png_ptr, image->info_ptr) == PNG_COLOR_TYPE_RGB)
+    {
+        // Some error handling: input file is PNG_COLOR_TYPE_RGB but must be PNG_COLOR_TYPE_RGBA
+    }
+
+    else if (png_get_color_type(image->png_ptr, image->info_ptr) != PNG_COLOR_TYPE_RGBA)
+    {
+        // Some error handling: color_type of input file must be PNG_COLOR_TYPE_RGBA
+    }
+    for (y = 0; y < image->height; y++)
+    {
+        png_byte *row = image->row_pointers[y];
+        for (x = 0; x < image->width; x++)
+        {
+            png_byte *ptr = &(row[x * 4]);
+            ptr[0] = ptr[3];
+            ptr[1] = ptr[0];
+            ptr[2] = ptr[1];
+            ptr[3] = ptr[2];
+        }
+    }
 }

@@ -35,7 +35,7 @@ void printInfo(char *input_file, struct Png *png)
     printf("Color type: %d\n", png->color_type);
     printf("Bit depth: %d\n", png->bit_depth);
 
-    printf("Number of passes: %d\n", png->number_of_passes);
+    // printf("Number of passes: %d\n", png->number_of_passes);
     free_png(png);
 }
 

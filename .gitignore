@@ -9,6 +9,7 @@ objects
 
 # Makefile
 output.png
+out.png
 
 coursework.out
 cw
@@ -19,3 +20,4 @@ a.out
 *.o
 .*.c
 .*.h
+*.sh

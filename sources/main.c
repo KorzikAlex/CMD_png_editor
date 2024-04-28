@@ -9,12 +9,14 @@
 #include "../include/read_write.h"
 #include "../include/print_help_info.h"
 #include "../include/draw_line.h"
+#include "../include/draw_pentagram.h"
+#include "../include/draw_mirror.h"
 #include "../include/add_operations.h"
 
 int main(int argc, char *argv[])
 {
     printf("Course work for option 4.20, created by Alexander Korshkov\n");
-    
+
     struct option long_opt[] = {
         {"help", no_argument, NULL, 'h'},
         {"info", no_argument, NULL, '!'},
@@ -38,7 +40,7 @@ int main(int argc, char *argv[])
         {"radius", required_argument, NULL, 'd'},
         {0, 0, 0, 0}};
 
-    info_file information = {.output_file = "output.png"};
+    info_file information = {.output_file = "out.png", .info = 0};
     info_line line;
     info_mirror mirror;
     info_pentagram pentagram;
@@ -48,7 +50,11 @@ int main(int argc, char *argv[])
     int option_index = 0;
 
     struct Png input_image;
-
+    if (argc == 1)
+    {
+        printHelp();
+        return 0;
+    }
     while ((opt = getopt_long(argc, argv, "hi:o:", long_opt, &option_index)) != -1)
     {
         switch (opt)
@@ -60,8 +66,8 @@ int main(int argc, char *argv[])
         }
         case '!':
         {
-            printInfo(information.input_file, &input_image);
-            return 0;
+            information.info = 1;
+            break;
         }
         case 'i':
         {
@@ -218,32 +224,33 @@ int main(int argc, char *argv[])
             }
             break;
         }
-        case 't': {
-            char *xy = optarg;
-            char *x = strtok(xy, ".");
-            char *y = strtok(NULL, ".");
-            if ((x == NULL) || (y == NULL))
+        case 't':
+        {
+            char *t = optarg;
+            if ((t == NULL))
             {
-                printf("Incorrect coordinates!\n");
+                printf("Incorrect thickness!\n");
                 exit(0);
             }
-            if (is_digit(x) && is_digit(y))
+            if (is_digit(t))
             {
-                mirror.x1 = atoi(x);
-                mirror.y1 = atoi(y);
+                line.thickness = atoi(t);
             }
             else
             {
-                printf("Incorrect coordinates!\n");
+                printf("Incorrect thickness!\n");
                 exit(0);
             }
             break;
         }
-        case 'd': {
-            if (is_digit(optarg)) {
+        case 'd':
+        {
+            if (is_digit(optarg))
+            {
                 pentagram.radius = atoi(optarg);
             }
-            else {
+            else
+            {
                 printf("Incorrect radius!\n");
                 exit(0);
             }
@@ -251,18 +258,42 @@ int main(int argc, char *argv[])
         }
         }
     }
-    if (!information.input_file) {
-        printf("You don't specify input file!\n");
+    if (!information.input_file)
+    {
+        if (optind < argc)
+        {
+            information.input_file = argv[argc - 1];
+        }
+        else
+        {
+            printf("You don't specify input file!\n");
+            exit(0);
+        }
     }
-    if (line.p == 1) {
-        draw_line(line, input_image);
+    read_png_file(information.input_file, &input_image);
+    if (information.info == 1)
+    {
+        printInfo(information.input_file, &input_image);
+        return 0;
     }
-    if (mirror.p == 1) {
-        draw_mirror(mirror, input_image);
+    if (line.p == 1)
+    {
+        if (line.x1 && line.y1 && line.x2 && line.y2 && line.r && line.g && line.b && line.thickness) {
+            draw_line(line, &input_image);
+        }
+        else {
+            printf("You don't specify all parameters!\n");
+            exit(0);
+        }
     }
-    if (pentagram.p == 1) {
-        draw_pentagram(pentagram, input_image);
+    if (mirror.p == 1)
+    {
+        draw_mirror(mirror, &input_image);
     }
-    
+    if (pentagram.p == 1)
+    {
+        draw_pentagram(pentagram, &input_image);
+    }
+    write_png_file(information.output_file, &input_image);
     return 0;
 }
