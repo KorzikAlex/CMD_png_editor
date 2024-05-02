@@ -40,22 +40,21 @@ int main(int argc, char *argv[])
         {"radius", required_argument, NULL, 'd'},
         {0, 0, 0, 0}};
 
+    struct Png input_image;
+
     info_file information = {.output_file = "out.png", .info = 0};
-    info_line line;
-    info_mirror mirror;
-    info_pentagram pentagram;
-    // char order[3] = {0, 0, 0};
+    info_line line = {.p = 0};
+    info_mirror mirror = {.p = 0};
+    info_pentagram pentagram = {.p = 0};
 
     int opt;
-    int option_index = 0;
 
-    struct Png input_image;
     if (argc == 1)
     {
         printHelp();
         return 0;
     }
-    while ((opt = getopt_long(argc, argv, "hi:o:", long_opt, &option_index)) != -1)
+    while ((opt = getopt_long(argc, argv, "hi:o:", long_opt, NULL)) != -1)
     {
         switch (opt)
         {
@@ -106,8 +105,8 @@ int main(int argc, char *argv[])
             }
             if (is_digit(x) && is_digit(y))
             {
-                line.x1 = atoi(x);
-                line.y1 = atoi(y);
+                line.p0.x = atoi(x);
+                line.p0.y = atoi(y);
             }
             else
             {
@@ -128,8 +127,8 @@ int main(int argc, char *argv[])
             }
             if (is_digit(x) && is_digit(y))
             {
-                line.x2 = atoi(x);
-                line.y2 = atoi(y);
+                line.p1.x = atoi(x);
+                line.p1.y = atoi(y);
             }
             else
             {
@@ -151,32 +150,32 @@ int main(int argc, char *argv[])
             }
             if (is_digit(r) && is_digit(g) && is_digit(b))
             {
-                line.r = atoi(r);
-                line.g = atoi(g);
-                line.b = atoi(b);
+                line.color.r = atoi(r);
+                line.color.g = atoi(g);
+                line.color.b = atoi(b);
             }
             else
             {
                 printf("Incorrect color!\n");
-                exit(0);
+                exit(41);
             }
             break;
         }
         case 'a':
         {
             char *axis = optarg;
-            if (axis == "x")
+            if (strcmp(axis, "x") == 0)
             {
                 mirror.axis = 'x';
             }
-            else if (axis == "y")
+            else if (strcmp(axis, "y") == 0)
             {
                 mirror.axis = 'y';
             }
             else
             {
                 printf("Incorrect axis!\n");
-                exit(0);
+                exit(41);
             }
             break;
         }
@@ -192,8 +191,8 @@ int main(int argc, char *argv[])
             }
             if (is_digit(x) && is_digit(y))
             {
-                mirror.x1 = atoi(x);
-                mirror.y1 = atoi(y);
+                mirror.p0.x = atoi(x);
+                mirror.p0.y = atoi(y);
             }
             else
             {
@@ -214,8 +213,8 @@ int main(int argc, char *argv[])
             }
             if (is_digit(x) && is_digit(y))
             {
-                mirror.x2 = atoi(x);
-                mirror.y2 = atoi(y);
+                mirror.p1.x = atoi(x);
+                mirror.p1.y = atoi(y);
             }
             else
             {
@@ -227,7 +226,7 @@ int main(int argc, char *argv[])
         case 't':
         {
             char *t = optarg;
-            if ((t == NULL))
+            if (t == NULL)
             {
                 printf("Incorrect thickness!\n");
                 exit(0);
@@ -276,51 +275,42 @@ int main(int argc, char *argv[])
         printInfo(information.input_file, &input_image);
         return 0;
     }
-    if (line.p == 1)
+    if (line.p)
     {
-        if (line.x1 && line.y1 && line.x2 && line.y2 && line.r && line.g && line.b && line.thickness)
+        if (check_line(&line))
         {
             draw_line(line, &input_image);
         }
         else
         {
             printf("You don't specify all parameters for line!\n");
-            png_destroy_read_struct(&(input_image.png_ptr), &(input_image.info_ptr), NULL);
-            for (int y = 0; y < input_image.height; y++)
-                free(input_image.row_pointers[y]);
-            free(input_image.row_pointers);
+            free_png(&input_image);
             exit(40);
         }
     }
-    if (mirror.p == 1)
+    if (mirror.p)
     {
-        if (mirror.axis && mirror.x1 && mirror.y1 && mirror.x2 && mirror.y2)
+        if (check_mirror(&mirror))
         {
             draw_mirror(mirror, &input_image);
         }
         else
         {
             printf("You don't specify all parameters for mirror!\n");
-            png_destroy_read_struct(&(input_image.png_ptr), &(input_image.info_ptr), NULL);
-            for (int y = 0; y < input_image.height; y++)
-                free(input_image.row_pointers[y]);
-            free(input_image.row_pointers);
+            free_png(&input_image);
             exit(40);
         }
     }
-    if (pentagram.p == 1)
+    if (pentagram.p)
     {
-        if (pentagram.radius && pentagram.thickness && pentagram.x && pentagram.y && pentagram.r && pentagram.g && pentagram.b)
+        if (check_pentagram(&pentagram))
         {
             draw_pentagram(pentagram, &input_image);
         }
         else
         {
             printf("You don't specify all parameters for Pentagram!\n");
-            png_destroy_read_struct(&(input_image.png_ptr), &(input_image.info_ptr), NULL);
-            for (int y = 0; y < input_image.height; y++)
-                free(input_image.row_pointers[y]);
-            free(input_image.row_pointers);
+            free_png(&input_image);
             exit(40);
         }
     }

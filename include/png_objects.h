@@ -2,6 +2,14 @@
 #define PNG_OBJECTS
 #include <png.h>
 
+typedef struct Point {
+    int x, y;
+} Point;
+
+typedef struct RGB {
+    int r, g, b;
+} RGB;
+
 struct Png
 {
     int width, height;
@@ -24,8 +32,8 @@ typedef struct info_file
 typedef struct info_line
 {
     int p;
-    int x1, y1, x2, y2;
-    int r, g, b;
+    Point p0, p1;
+    RGB color;
     int thickness;
 } info_line;
 
@@ -33,16 +41,16 @@ typedef struct info_mirror
 {
     int p;
     char axis;
-    int x1, y1, x2, y2;
+    Point p0, p1;
 } info_mirror;
 
 typedef struct info_pentagram
 {
     int p;
-    int x, y;
+    Point center;
     int radius;
     int thickness;
-    int r, g, b;
+    
 } info_pentagram;
 
 #endif

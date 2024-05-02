@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -21,13 +22,19 @@ int is_digit(char *line)
     return 1;
 }
 
-void set_pixel(struct Png* image, Point p, Pixel color)
+void free_png(struct Png *png)
 {
-    int index;
-    if (p.x >= 0 && p.x < image->header.width_px && p.y >= 0 && p.y < image->header.height_px) {
-        index = ((image->header.height_px - p.y - 1) * image->header.width_px + p.x) * 3;
-        image->data[index + 2] = color.red;
-        image->data[index] = color.blue;
-        image->data[index + 1] = color.green;
+    int y;
+    if (png->row_pointers != NULL)
+    {
+        for (y = 0; y < png->height; y++)
+        {
+            free(png->row_pointers[y]);
+        }
+    }
+    free(png->row_pointers);
+    if (png->png_ptr != NULL && png->info_ptr != NULL)
+    {
+        png_destroy_read_struct(&png->png_ptr, &png->info_ptr, NULL);
     }
 }

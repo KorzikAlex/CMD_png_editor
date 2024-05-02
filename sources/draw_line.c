@@ -6,9 +6,9 @@
 #include "../include/png_objects.h"
 
 void draw_line(info_line line_obj, struct Png *png_object) {
-    int dx, dy;
-    dx = abs(line_obj.x2 - line_obj.x1);
-    dy = abs(line_obj.y2 - line_obj.y1);
+    // int dx, dy;
+    // dx = abs(line_obj.x2 - line_obj.x1);
+    // dy = abs(line_obj.y2 - line_obj.y1);
 
     if (png_get_color_type(png_object->png_ptr, png_object->info_ptr) == PNG_COLOR_TYPE_RGB)
     {
@@ -19,11 +19,26 @@ void draw_line(info_line line_obj, struct Png *png_object) {
     {
         printf("color_type of input file must be PNG_COLOR_TYPE_RGBA");
     }
-    double k = (double)(dy / dx);
-    for (int i = 0; i <= dx; i++) {
-        int x = line_obj.x1 + i;
-        int y = line_obj.y1 + i * k;
-        
+    // double k = (double)(dy / dx);
+    // for (int i = 0; i <= dx; i++) {
+    //     int x = line_obj.x1 + i;
+    //     int y = line_obj.y1 + i * k;
+    // }
+}
+
+int check_line(info_line *line_obj) {
+    if (!line_obj->p0.x || !line_obj->p0.y) {
+        return 0;
     }
+    if (!line_obj->p1.x ||!line_obj->p1.y) {
+        return 0;
+    }
+    if (!line_obj->color.r ||!line_obj->color.g ||!line_obj->color.b) {
+        return 0;
+    }
+    if (!line_obj->thickness) {
+        return 0;
+    }
+    return 1;
 }
     
