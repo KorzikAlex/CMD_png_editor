@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <png.h>
+#include <stdlib.h>
 
 #include "../include/draw_line.h"
 #include "../include/png_objects.h"
 
 void draw_line(info_line line_obj, struct Png *png_object) {
-    int x, y;
+    int dx, dy;
+    dx = abs(line_obj.x2 - line_obj.x1);
+    dy = abs(line_obj.y2 - line_obj.y1);
+
     if (png_get_color_type(png_object->png_ptr, png_object->info_ptr) == PNG_COLOR_TYPE_RGB)
     {
         printf("input file is PNG_COLOR_TYPE_RGB but must be PNG_COLOR_TYPE_RGBA");
@@ -15,13 +19,11 @@ void draw_line(info_line line_obj, struct Png *png_object) {
     {
         printf("color_type of input file must be PNG_COLOR_TYPE_RGBA");
     }
-    for (y = 0; y < png_object->height; y++)
-    {
-        png_byte *row = png_object->row_pointers[y];
-        for (x = 0; x < png_object->width; x++)
-        {
-            png_byte *ptr = &(row[x * 4]);
-        }
+    double k = (double)(dy / dx);
+    for (int i = 0; i <= dx; i++) {
+        int x = line_obj.x1 + i;
+        int y = line_obj.y1 + i * k;
+        
     }
 }
     

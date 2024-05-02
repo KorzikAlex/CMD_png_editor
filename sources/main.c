@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
         else
         {
             printf("You don't specify input file!\n");
-            exit(0);
+            exit(40);
         }
     }
     read_png_file(information.input_file, &input_image);
@@ -278,39 +278,51 @@ int main(int argc, char *argv[])
     }
     if (line.p == 1)
     {
-        if (line.x1 && line.y1 && line.x2 && line.y2 && line.r && line.g && line.b && line.thickness) {
+        if (line.x1 && line.y1 && line.x2 && line.y2 && line.r && line.g && line.b && line.thickness)
+        {
             draw_line(line, &input_image);
         }
-        else {
-            printf("You don't specify all parameters!\n");
-            png_destroy_read_struct(&input_image->png_ptr, &input_image->info_ptr, NULL);
-            fclose(fp)
-            exit(0);
+        else
+        {
+            printf("You don't specify all parameters for line!\n");
+            png_destroy_read_struct(&(input_image.png_ptr), &(input_image.info_ptr), NULL);
+            for (int y = 0; y < input_image.height; y++)
+                free(input_image.row_pointers[y]);
+            free(input_image.row_pointers);
+            exit(40);
         }
     }
     if (mirror.p == 1)
     {
-        if (mirror.axis && mirror.x1 && mirror.y1 && mirror.x2 && mirror.y2) {
+        if (mirror.axis && mirror.x1 && mirror.y1 && mirror.x2 && mirror.y2)
+        {
             draw_mirror(mirror, &input_image);
         }
-        else {
-            printf("You don't specify all parameters!\n");
-            png_destroy_read_struct(&input_image->png_ptr, &input_image->info_ptr, NULL);
-            fclose(fp);
-            exit(0);
+        else
+        {
+            printf("You don't specify all parameters for mirror!\n");
+            png_destroy_read_struct(&(input_image.png_ptr), &(input_image.info_ptr), NULL);
+            for (int y = 0; y < input_image.height; y++)
+                free(input_image.row_pointers[y]);
+            free(input_image.row_pointers);
+            exit(40);
         }
     }
     if (pentagram.p == 1)
     {
-        if (pentagram.radius && pentagram.thickness && pentagram.x && pentagram.y && pentagram.r && pentagram.g && pentagram.b) {
+        if (pentagram.radius && pentagram.thickness && pentagram.x && pentagram.y && pentagram.r && pentagram.g && pentagram.b)
+        {
             draw_pentagram(pentagram, &input_image);
-        } else {
-            printf("You don't specify all parameters!\n");
-            png_destroy_read_struct(&input_image->png_ptr, &input_image->info_ptr, NULL);
-            fclose(fp);
-            exit(0);
         }
-        
+        else
+        {
+            printf("You don't specify all parameters for Pentagram!\n");
+            png_destroy_read_struct(&(input_image.png_ptr), &(input_image.info_ptr), NULL);
+            for (int y = 0; y < input_image.height; y++)
+                free(input_image.row_pointers[y]);
+            free(input_image.row_pointers);
+            exit(40);
+        }
     }
     write_png_file(information.output_file, &input_image);
     return 0;
