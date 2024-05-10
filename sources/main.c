@@ -44,20 +44,22 @@ int main(int argc, char *argv[]) {
             {"input",      required_argument, NULL, 'i'}, /* входной файл */
             {"output",     required_argument, NULL, 'o'}, /* выходной файл */
 
-            {"line",       no_argument,       NULL, 'l'}, /* рисование линии */
-            {"start",      required_argument, NULL, 's'}, /* начальная точка */
-            {"end",        required_argument, NULL, 'e'}, /* конечная точка */
-            {"color",      required_argument, NULL, 'c'}, /* цвет линии (для линии и пентаграмма) */
-            {"thickness",  required_argument, NULL, 't'}, /* толщина линии */
+            {"line",       no_argument,       NULL, 300}, /* рисование линии */
+            {"start",      required_argument, NULL, 301}, /* начальная точка */
+            {"end",        required_argument, NULL, 302}, /* конечная точка */
+            {"color",      required_argument, NULL, 303}, /* цвет линии */
+            {"thickness",  required_argument, NULL, 304}, /* толщина линии */
 
-            {"mirror",     no_argument,       NULL, 'm'}, /* отражение */
-            {"axis",       required_argument, NULL, 'a'}, /* ось отражения */
-            {"left_up",    required_argument, NULL, 'u'}, /* верхний левый угол области */
-            {"right_down", required_argument, NULL, 'r'}, /* нижний правый угол области */
+            {"mirror",     no_argument,       NULL, 400}, /* отражение */
+            {"axis",       required_argument, NULL, 401}, /* ось отражения */
+            {"left_up",    required_argument, NULL, 402}, /* верхний левый угол области */
+            {"right_down", required_argument, NULL, 403}, /* нижний правый угол области */
 
-            {"pentagram",  no_argument,       NULL, 'p'}, /* рисование пентаграммы в круге (для линии и пентаграмма) */
-            {"center",     required_argument, NULL, 'q'}, /* центр круга */
-            {"radius",     required_argument, NULL, 'd'}, /* радиус круга */
+            {"pentagram",  no_argument,       NULL, 404}, /* рисование пентаграммы в круге*/
+            {"center",     required_argument, NULL, 405}, /* центр круга */
+            {"radius",     required_argument, NULL, 406}, /* радиус круга */
+            /* color */ /* цвет линии пентаграмма */
+            /* thickness */ /* толщина линии пентаграмма */
             {0, 0, 0,                               0}
     };
 
@@ -98,22 +100,22 @@ int main(int argc, char *argv[]) {
                 break;
             }
                 /* рисование линии */
-            case 'l': {
+            case 300: {
                 line.p = 1;
                 break;
             }
                 /* начальная координата линии */
-            case 's': {
+            case 301: {
                 set_start_cords(optarg, &line);
                 break;
             }
                 /* конечная координата линии */
-            case 'e': {
+            case 302: {
                 set_end_cords(optarg, &line);
                 break;
             }
                 /* цвет линии (для пентаграммы тоже)*/
-            case 'c': {
+            case 303: {
                 if (line.p == 1)
                     set_color_line(optarg, &line);
                 if (pentagram.p == 1)
@@ -121,7 +123,7 @@ int main(int argc, char *argv[]) {
                 break;
             }
                 /* толщина линии (для пентаграммы тоже) */
-            case 't': {
+            case 304: {
                 if (line.p == 1)
                     set_thickness_line(optarg, &line);
                 if (pentagram.p == 1)
@@ -129,37 +131,37 @@ int main(int argc, char *argv[]) {
                 break;
             }
                 /* отражение области */
-            case 'm': {
+            case 400: {
                 mirror.p = 1;
                 break;
             }
                 /* ось отражённой области */
-            case 'a': {
+            case 401: {
                 set_axis(optarg, &mirror);
                 break;
             }
                 /* верхний левый угол области */
-            case 'u': {
+            case 402: {
                 set_left_up(optarg, &mirror);
                 break;
             }
                 /* нижний правый угол области */
-            case 'r': {
+            case 403: {
                 set_right_down(optarg, &mirror);
                 break;
             }
                 /* рисование пентаграмы в круге */
-            case 'p': {
+            case 404: {
                 pentagram.p = 1;
                 break;
             }
                 /* радиус круга */
-            case 'd': {
+            case 405: {
                 set_radius(optarg, &pentagram);
                 break;
             }
                 /* центр круга */
-            case 'q': {
+            case 406: {
                 set_center(optarg, &pentagram);
                 break;
             }

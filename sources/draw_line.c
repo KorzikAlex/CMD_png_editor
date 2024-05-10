@@ -14,6 +14,7 @@ void draw_line(info_line line, struct Png *png) {
     } else if (png_get_color_type(png->png_ptr, png->info_ptr) != PNG_COLOR_TYPE_RGBA) {
         printf("color_type of input file must be PNG_COLOR_TYPE_RGBA");
     }
+
     puts("ok");
 }
 
