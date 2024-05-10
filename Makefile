@@ -4,10 +4,12 @@ LIBS = -lpng
 SRCDIR = sources
 OBJDIR = objects
 INCDIR = include
+DOCSDIR = docs/html
 
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
 EXECUTABLE = cw
+DOXYGEN_CONFIG = Doxyfile
 
 all: $(EXECUTABLE)
 
@@ -23,3 +25,11 @@ clean_objects:
 
 clean:
 	rm -rf $(OBJDIR) $(EXECUTABLE)
+
+clean_docs:
+	rm -rf $(DOCSDIR)
+
+docs:
+	@doxygen $(DOXYGEN_CONFIG)
+
+.PHONY: all clean docs

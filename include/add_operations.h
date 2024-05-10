@@ -4,5 +4,9 @@
 #include "../include/png_objects.h"
 
 int is_digit(char *line);
+
 void free_png(struct Png *png);
+
+void check_color(info_line *line);
+
 #endif

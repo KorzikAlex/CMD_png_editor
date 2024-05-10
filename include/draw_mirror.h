@@ -3,7 +3,14 @@
 
 #include "../include/png_objects.h"
 
-void draw_mirror(info_mirror mirror_obj, struct Png *png_object);
-int check_mirror(info_mirror *mirror_obj);
+void draw_mirror(info_mirror mirror, struct Png *png);
+
+int check_mirror(info_mirror *mirror);
+
+void set_left_up(char *xy, info_mirror *mirror);
+
+void set_right_down(char *xy, info_mirror *mirror);
+
+void set_axis(char *axis, info_mirror *mirror);
 
 #endif

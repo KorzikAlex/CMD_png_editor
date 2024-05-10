@@ -1,7 +1,7 @@
 #ifndef PRINT_HELP_INFO_H
 #define PRINT_HELP_INFO_H
 
-void printInfo(char *input_file, struct Png *png);
-void printHelp();
+void print_info(char *input_file, struct Png *png); /* пишет информацию об аргументах и опциях программы */
+void print_help(); /* печатает справку */
 
 #endif
