@@ -3,7 +3,16 @@
 
 #include "../include/png_objects.h"
 
-void draw_line(info_line line_obj, struct Png *png_object);
-int check_line(info_line *line_obj);
+void draw_line(info_line line, struct Png *png);
+
+int check_line(info_line *line);
+
+void set_start_cords(char *xy, info_line *line);
+
+void set_end_cords(char *xy, info_line *line);
+
+void set_color_line(char *rgb, info_line *line);
+
+void set_thickness_line(char *thickness, info_line *line);
 
 #endif

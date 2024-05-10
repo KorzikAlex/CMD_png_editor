@@ -1,319 +1,219 @@
+/**
+ * \author KorzikAlex
+ * \brief Главный файл
+ *
+ * \details Главный файл программы CMD_PNG_EDITOR, в которой происходит обработка и вызов функций, в том числе
+ * чтение и запись файла, рисование лини и пентаграмма, а также отражение области.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
-#include <png.h>
 #include <string.h>
-#include <ctype.h>
 
-#include "../include/png_objects.h"
-#include "../include/read_write.h"
-#include "../include/print_help_info.h"
-#include "../include/draw_line.h"
-#include "../include/draw_pentagram.h"
-#include "../include/draw_mirror.h"
-#include "../include/add_operations.h"
+#include "../include/png_objects.h" /* объекты и структуры для PNG */
+#include "../include/read_write.h" /* функции чтения и записи файла */
+#include "../include/print_help_info.h" /* функции вывода информации о программе и изображении*/
+#include "../include/draw_line.h" /* функции рисования линии */
+#include "../include/draw_pentagram.h" /* функции рисования пентаграммы */
+#include "../include/draw_mirror.h" /* функции отражения области */
+#include "../include/add_operations.h" /* дополнительных  */
 
-int main(int argc, char *argv[])
-{
-    printf("Course work for option 4.20, created by Alexander Korshkov\n");
+/**
+ * \brief  Главная функция программы
+ * \param  argc Количество аргументов командной строки
+ * \param  argv Массив аргументов командной строки
+ * \return Код возврата
+ */
 
-    struct option long_opt[] = {
-        {"help", no_argument, NULL, 'h'},
-        {"info", no_argument, NULL, '!'},
+int main(int argc, char *argv[]) {
+    /* вывод информации о курсовой работе и авторе */
+    puts("Course work for option 4.20, created by Alexander Korshkov");
 
-        {"input", required_argument, NULL, 'i'},
-        {"output", required_argument, NULL, 'o'},
-
-        {"line", no_argument, NULL, 'l'},
-        {"start", required_argument, NULL, 's'},
-        {"end", required_argument, NULL, 'e'},
-        {"color", required_argument, NULL, 'c'},
-        {"thickness", required_argument, NULL, 't'},
-
-        {"mirror", no_argument, NULL, 'm'},
-        {"axis", required_argument, NULL, 'a'},
-        {"left_up", required_argument, NULL, 'u'},
-        {"right_down", required_argument, NULL, 'r'},
-
-        {"pentagram", no_argument, NULL, 'p'},
-        {"center", required_argument, NULL, 'q'},
-        {"radius", required_argument, NULL, 'd'},
-        {0, 0, 0, 0}};
-
-    struct Png input_image;
-
-    info_file information = {.output_file = "out.png", .info = 0};
-    info_line line = {.p = 0};
-    info_mirror mirror = {.p = 0};
-    info_pentagram pentagram = {.p = 0};
-
-    int opt;
-
-    if (argc == 1)
-    {
-        printHelp();
+    /* проверка, переданы ли аргументы */
+    if (argc == 1) {
+        print_help();
         return 0;
     }
-    while ((opt = getopt_long(argc, argv, "hi:o:", long_opt, NULL)) != -1)
-    {
-        switch (opt)
-        {
-        case 'h':
-        {
-            printHelp();
-            break;
-        }
-        case '!':
-        {
-            information.info = 1;
-            break;
-        }
-        case 'i':
-        {
-            information.input_file = optarg;
-            break;
-        }
-        case 'o':
-        {
-            information.output_file = optarg;
-            break;
-        }
-        case 'l':
-        {
-            line.p = 1;
-            break;
-        }
-        case 'm':
-        {
-            mirror.p = 1;
-            break;
-        }
-        case 'p':
-        {
-            pentagram.p = 1;
-            break;
-        }
-        case 's':
-        {
-            char *xy = optarg;
-            char *x = strtok(xy, ".");
-            char *y = strtok(NULL, ".");
-            if ((x == NULL) || (y == NULL))
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+
+    /* структура, содержащая длинная флаги */
+    struct option long_opt[] = {
+            {"help",       no_argument,       NULL, 'h'}, /* справка */
+            {"info",       no_argument,       NULL, '!'}, /* информация о файле */
+
+            {"input",      required_argument, NULL, 'i'}, /* входной файл */
+            {"output",     required_argument, NULL, 'o'}, /* выходной файл */
+
+            {"line",       no_argument,       NULL, 'l'}, /* рисование линии */
+            {"start",      required_argument, NULL, 's'}, /* начальная точка */
+            {"end",        required_argument, NULL, 'e'}, /* конечная точка */
+            {"color",      required_argument, NULL, 'c'}, /* цвет линии (для линии и пентаграмма) */
+            {"thickness",  required_argument, NULL, 't'}, /* толщина линии */
+
+            {"mirror",     no_argument,       NULL, 'm'}, /* отражение */
+            {"axis",       required_argument, NULL, 'a'}, /* ось отражения */
+            {"left_up",    required_argument, NULL, 'u'}, /* верхний левый угол области */
+            {"right_down", required_argument, NULL, 'r'}, /* нижний правый угол области */
+
+            {"pentagram",  no_argument,       NULL, 'p'}, /* рисование пентаграммы в круге (для линии и пентаграмма) */
+            {"center",     required_argument, NULL, 'q'}, /* центр круга */
+            {"radius",     required_argument, NULL, 'd'}, /* радиус круга */
+            {0, 0, 0,                               0}
+    };
+
+    /* информация о фото */
+    struct Png input_image;
+
+    /* информация о входном и выходном файле */
+    info_file information = {.output_file = "out.png", .info = 0};
+
+    /* информация о линии, области для отражения и рисования пентаграммы */
+    info_line line = {.p = 0, .p0 = {.x = -1, .y = -1}, .p1 = {.x = -1, .y = -1},
+                      .thickness = -1, .color = {.r = -1, .g = -1, .b = -1}};
+    info_mirror mirror = {.p = 0, .p0 = {.x = -1, .y = -1}, .p1 = {.x = -1, .y = -1}, .axis = 'n'};
+    info_pentagram pentagram = {.p = 0, .center = {.x = -1, .y = -1}, .radius = -1};
+
+    /* цикл, обрабатывающий флаги и аргументы */
+    int opt;
+    while ((opt = getopt_long(argc, argv, "hi:o:", long_opt, NULL)) != -1) {
+        switch (opt) {
+            /* справка */
+            case 'h': {
+                print_help();
+                break;
             }
-            if (is_digit(x) && is_digit(y))
-            {
-                line.p0.x = atoi(x);
-                line.p0.y = atoi(y);
+                /* информация о файле */
+            case '!': {
+                information.info = 1;
+                break;
             }
-            else
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+                /* входной файл */
+            case 'i': {
+                information.input_file = optarg;
+                break;
             }
-            break;
-        }
-        case 'e':
-        {
-            char *xy = optarg;
-            char *x = strtok(xy, ".");
-            char *y = strtok(NULL, ".");
-            if ((x == NULL) || (y == NULL))
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+                /* выходной файл */
+            case 'o': {
+                information.output_file = optarg;
+                break;
             }
-            if (is_digit(x) && is_digit(y))
-            {
-                line.p1.x = atoi(x);
-                line.p1.y = atoi(y);
+                /* рисование линии */
+            case 'l': {
+                line.p = 1;
+                break;
             }
-            else
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+                /* начальная координата линии */
+            case 's': {
+                set_start_cords(optarg, &line);
+                break;
             }
-            break;
-        }
-        case 'c':
-        {
-            char *rgb = optarg;
-            char *r = strtok(rgb, ".");
-            char *g = strtok(NULL, ".");
-            char *b = strtok(NULL, ".");
-            if ((r == NULL) || (g == NULL) || (b == NULL))
-            {
-                printf("Incorrect color!\n");
-                exit(0);
+                /* конечная координата линии */
+            case 'e': {
+                set_end_cords(optarg, &line);
+                break;
             }
-            if (is_digit(r) && is_digit(g) && is_digit(b))
-            {
-                line.color.r = atoi(r);
-                line.color.g = atoi(g);
-                line.color.b = atoi(b);
+                /* цвет линии (для пентаграммы тоже)*/
+            case 'c': {
+                if (line.p == 1)
+                    set_color_line(optarg, &line);
+                if (pentagram.p == 1)
+                    set_color_pentagram(optarg, &pentagram);
+                break;
             }
-            else
-            {
-                printf("Incorrect color!\n");
-                exit(41);
+                /* толщина линии (для пентаграммы тоже) */
+            case 't': {
+                if (line.p == 1)
+                    set_thickness_line(optarg, &line);
+                if (pentagram.p == 1)
+                    set_thickness_pentagram(optarg, &pentagram);
+                break;
             }
-            break;
-        }
-        case 'a':
-        {
-            char *axis = optarg;
-            if (strcmp(axis, "x") == 0)
-            {
-                mirror.axis = 'x';
+                /* отражение области */
+            case 'm': {
+                mirror.p = 1;
+                break;
             }
-            else if (strcmp(axis, "y") == 0)
-            {
-                mirror.axis = 'y';
+                /* ось отражённой области */
+            case 'a': {
+                set_axis(optarg, &mirror);
+                break;
             }
-            else
-            {
-                printf("Incorrect axis!\n");
-                exit(41);
+                /* верхний левый угол области */
+            case 'u': {
+                set_left_up(optarg, &mirror);
+                break;
             }
-            break;
-        }
-        case 'u':
-        {
-            char *xy = optarg;
-            char *x = strtok(xy, ".");
-            char *y = strtok(NULL, ".");
-            if ((x == NULL) || (y == NULL))
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+                /* нижний правый угол области */
+            case 'r': {
+                set_right_down(optarg, &mirror);
+                break;
             }
-            if (is_digit(x) && is_digit(y))
-            {
-                mirror.p0.x = atoi(x);
-                mirror.p0.y = atoi(y);
+                /* рисование пентаграмы в круге */
+            case 'p': {
+                pentagram.p = 1;
+                break;
             }
-            else
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+                /* радиус круга */
+            case 'd': {
+                set_radius(optarg, &pentagram);
+                break;
             }
-            break;
-        }
-        case 'r':
-        {
-            char *xy = optarg;
-            char *x = strtok(xy, ".");
-            char *y = strtok(NULL, ".");
-            if ((x == NULL) || (y == NULL))
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
+                /* центр круга */
+            case 'q': {
+                set_center(optarg, &pentagram);
+                break;
             }
-            if (is_digit(x) && is_digit(y))
-            {
-                mirror.p1.x = atoi(x);
-                mirror.p1.y = atoi(y);
-            }
-            else
-            {
-                printf("Incorrect coordinates!\n");
-                exit(0);
-            }
-            break;
-        }
-        case 't':
-        {
-            char *t = optarg;
-            if (t == NULL)
-            {
-                printf("Incorrect thickness!\n");
-                exit(0);
-            }
-            if (is_digit(t))
-            {
-                line.thickness = atoi(t);
-            }
-            else
-            {
-                printf("Incorrect thickness!\n");
-                exit(0);
-            }
-            break;
-        }
-        case 'd':
-        {
-            if (is_digit(optarg))
-            {
-                pentagram.radius = atoi(optarg);
-            }
-            else
-            {
-                printf("Incorrect radius!\n");
-                exit(0);
-            }
-            break;
-        }
         }
     }
-    if (!information.input_file)
-    {
-        if (optind < argc)
-        {
+    /* проверка, что имя файла было как-то передано (через опцию или в конце отдельным аргументом) */
+    if (!information.input_file) {
+        if (optind < argc) {
             information.input_file = argv[argc - 1];
-        }
-        else
-        {
+        } else {
             printf("You don't specify input file!\n");
             exit(40);
         }
     }
+    /* чтение и получение информации об изображении */
     read_png_file(information.input_file, &input_image);
-    if (information.info == 1)
-    {
-        printInfo(information.input_file, &input_image);
+
+    /* проверка, ввёл ли пользователь флаг --info */
+    if (information.info == 1) {
+        print_info(information.input_file, &input_image);
+        free_png(&input_image);
         return 0;
     }
-    if (line.p)
-    {
+    /* проверка на корректность и количество введённых параметров линии */
+    if (line.p) {
         if (check_line(&line))
-        {
             draw_line(line, &input_image);
-        }
-        else
-        {
+        else {
             printf("You don't specify all parameters for line!\n");
             free_png(&input_image);
             exit(40);
         }
     }
-    if (mirror.p)
-    {
+    /* проверка на корректность и количество введённых параметров отражённой области */
+    if (mirror.p) {
         if (check_mirror(&mirror))
-        {
             draw_mirror(mirror, &input_image);
-        }
-        else
-        {
+        else {
             printf("You don't specify all parameters for mirror!\n");
             free_png(&input_image);
             exit(40);
         }
     }
-    if (pentagram.p)
-    {
+    /* проверка на корректность и количество введённых параметров пентаграммы в круге */
+    if (pentagram.p) {
         if (check_pentagram(&pentagram))
-        {
             draw_pentagram(pentagram, &input_image);
-        }
-        else
-        {
-            printf("You don't specify all parameters for Pentagram!\n");
+        else {
+            printf("You don't specify all parameters for pentagram!\n");
             free_png(&input_image);
             exit(40);
         }
     }
+    /* запись файла */
     write_png_file(information.output_file, &input_image);
     return 0;
 }
