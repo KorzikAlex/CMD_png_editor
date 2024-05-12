@@ -7,7 +7,7 @@
 #include "../include/png_objects.h"
 #include "../include/add_operations.h"
 
-void draw_pentagram(info_pentagram pentagram, struct Png *png) {
+void draw_pentagram(Point center, int radius, int thickness, RGB color, Png *png) {
     return;
 }
 

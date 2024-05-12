@@ -3,7 +3,7 @@
 
 #include "../include/png_objects.h"
 
-void draw_pentagram(info_pentagram pentagram, struct Png *png);
+void draw_pentagram(Point center, int radius, int thickness, RGB color, Png *png);
 int check_pentagram(info_pentagram *pentagram);
 void set_radius(char *radius, info_pentagram *pentagram);
 void set_center(char *center, info_pentagram *pentagram);

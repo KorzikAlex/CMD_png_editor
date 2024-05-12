@@ -6,7 +6,7 @@
 #include "../include/read_write.h"
 
 /* функция чтения из файла */
-void read_png_file(char *file_name, struct Png *image)
+void read_png_file(char *file_name, Png *image)
 {
     int x, y; /* размеры изображения */
     FILE *fp = fopen(file_name, "rb"); /* открытие файла в бинарном режиме */
@@ -72,7 +72,7 @@ void read_png_file(char *file_name, struct Png *image)
 }
 
 /* функция записи в файл */
-void write_png_file(char *file_name, struct Png *image)
+void write_png_file(char *file_name, Png *image)
 {
     int x, y; /* размеры изображения */
     FILE *fp = fopen(file_name, "wb"); /* открытие файла для записи */

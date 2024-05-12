@@ -3,7 +3,7 @@
 
 #include "../include/png_objects.h"
 
-void draw_mirror(info_mirror mirror, struct Png *png);
+void draw_mirror(Point p0, Point p1, char axis, Png *png);
 
 int check_mirror(info_mirror *mirror);
 

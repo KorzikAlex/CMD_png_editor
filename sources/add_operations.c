@@ -20,17 +20,12 @@ int is_digit(char *line) {
 }
 
 /* освобождение памяти от изображения */
-void free_png(struct Png *png) {
+void free_png(Png *png) {
     int y;
-    if (png->row_pointers != NULL) {
-        for (y = 0; y < png->height; y++) {
-            free(png->row_pointers[y]);
-        }
-    }
+    for (y = 0; y < png->height; y++)
+        free(png->row_pointers[y]);
     free(png->row_pointers);
-    if (png->png_ptr != NULL && png->info_ptr != NULL) {
-        png_destroy_read_struct(&png->png_ptr, &png->info_ptr, NULL);
-    }
+    png_destroy_read_struct(&png->png_ptr, &png->info_ptr, NULL);
 }
 
 void check_color(info_line *line_obj) {
@@ -46,4 +41,19 @@ void check_color(info_line *line_obj) {
         puts("Your BLUE (B) color isn't correct (must be between 0 and 255)");
         exit(42);
     }
-};
+}
+
+void set_pixel(Png *png, Point p, RGB color) {
+    if (p.x >= 0 && p.x < png->width && p.y >= 0 && p.y < png->height) {
+        png_byte *ptr = &(png->row_pointers[p.y][p.x * 4]);
+        ptr[0] = color.r;
+        ptr[1] = color.g;
+        ptr[2] = color.b;
+    }
+}
+
+RGB get_color(Point p, Png *png) {
+    png_byte *ptr = &(png->row_pointers[p.y][p.x * 4]);
+    RGB color = {.r=ptr[0], .g=ptr[1], .b=ptr[2]};
+    return color;
+}

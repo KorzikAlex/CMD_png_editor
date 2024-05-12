@@ -1,8 +1,8 @@
 /**
  * \author KorzikAlex
- * \brief Главный файл
+ * \brief Главный файл программы CMD PNG EDITOR
  *
- * \details Главный файл программы CMD_PNG_EDITOR, в которой происходит обработка и вызов функций, в том числе
+ * \details Главный файл программы CMD PNG EDITOR, в которой происходит обработка и вызов функций, в том числе
  * чтение и запись файла, рисование лини и пентаграмма, а также отражение области.
  */
 
@@ -21,8 +21,8 @@
 
 /**
  * \brief  Главная функция программы
- * \param  argc Количество аргументов командной строки
- * \param  argv Массив аргументов командной строки
+ * \param [in] argc Количество аргументов командной строки
+ * \param [in] argv Массив аргументов командной строки
  * \return Код возврата
  */
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
     };
 
     /* информация о фото */
-    struct Png input_image;
+    Png input_image;
 
     /* информация о входном и выходном файле */
     info_file information = {.output_file = "out.png", .info = 0};
@@ -188,7 +188,7 @@ int main(int argc, char *argv[]) {
     /* проверка на корректность и количество введённых параметров линии */
     if (line.p) {
         if (check_line(&line))
-            draw_line(line, &input_image);
+            draw_line(line.p0, line.p1, line.color, line.thickness, &input_image);
         else {
             printf("You don't specify all parameters for line!\n");
             free_png(&input_image);
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
     /* проверка на корректность и количество введённых параметров отражённой области */
     if (mirror.p) {
         if (check_mirror(&mirror))
-            draw_mirror(mirror, &input_image);
+            draw_mirror(mirror.p0, mirror.p1, mirror.axis, &input_image);
         else {
             printf("You don't specify all parameters for mirror!\n");
             free_png(&input_image);
@@ -208,7 +208,7 @@ int main(int argc, char *argv[]) {
     /* проверка на корректность и количество введённых параметров пентаграммы в круге */
     if (pentagram.p) {
         if (check_pentagram(&pentagram))
-            draw_pentagram(pentagram, &input_image);
+            draw_pentagram(pentagram.center, pentagram.radius, pentagram.thickness, pentagram.color, &input_image);
         else {
             printf("You don't specify all parameters for pentagram!\n");
             free_png(&input_image);

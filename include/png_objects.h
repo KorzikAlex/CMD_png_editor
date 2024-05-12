@@ -36,27 +36,19 @@ typedef struct RGB {
  * \struct Png
  * \brief Структура для информации о PNG изображении.
  * \details Содержит информацию об изображении.
- * \var width - ширина изображения
- *
- * \var height - высота изображения
- * \var color_type - тип цвета
- * \var bit_depth - глубина цвета
- * \var png_ptr - указатель на структуру для хранения информации о PNG изображении
- * \var info_ptr - указатель на структуру для хранения информации о PNG изображении
- * \var number_of_passes - количество проходов по изображению
- * \var row_pointers - указатель на структуру для хранения строк.
  */
 #pragma pack(push, 1)
-struct Png {
-    int width, height;
-    png_byte color_type;
-    png_byte bit_depth;
+typedef struct Png {
+    int width; /**< Ширина изображения */
+    int height; /**< Высота изображения */
+    png_byte color_type; /**< Тип цвета */
+    png_byte bit_depth; /**< Глубина цвета */
 
-    png_structp png_ptr;
-    png_infop info_ptr;
-    int number_of_passes;
-    png_bytep *row_pointers;
-};
+    png_structp png_ptr; /**< Указатель на структуру PNG изображения */
+    png_infop info_ptr; /**< Указатель на структуру для хранения информации о PNG изображении */
+    int number_of_passes; /**< Количество проходов по изображению */
+    png_bytep *row_pointers; /**< Указатель на структуру для хранения строк */
+} Png;
 #pragma pack(pop)
 
 /*!
@@ -87,7 +79,8 @@ typedef struct info_file {
  */
 #pragma pack(push, 1)
 typedef struct info_line {
-    Point p0, p1;
+    Point p0;
+    Point p1;
     RGB color;
     int p;
     int thickness;
@@ -105,7 +98,8 @@ typedef struct info_line {
  */
 #pragma pack(push, 1)
 typedef struct info_mirror {
-    Point p0, p1;
+    Point p0;
+    Point p1;
     int p;
     char axis;
 } info_mirror;

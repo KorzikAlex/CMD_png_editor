@@ -8,7 +8,35 @@
 #include "../include/add_operations.h"
 
 /* функция отражения области */
-void draw_mirror(info_mirror mirror, struct Png *png) {
+void draw_mirror(Point p0, Point p1, char axis, Png *png) {
+//    int width = p1.x - p0.x;
+//    int height = p1.y - p0.y;
+//    if (axis == 'x')
+//    {
+//        for (int y = p0.y; y <= p1.y; ++y)
+//        {
+//            for (int x = p0.x; x < p0.x + width / 2; ++x)
+//            {
+//                int mirroredX = p1.x - (x - p0.x);
+//                RGB tempColor = get_color(x, y);
+//                set_pixel(x, y, get_color(mirroredX, y));
+//                set_color(mirroredX, y, tempColor);
+//            }
+//        }
+//    }
+//    else if (axis == 'y')
+//    {
+//        for (int y = p0.y; y < p0.y + height / 2; ++y)
+//        {
+//            for (int x = p0.x; x <= p1.x; ++x)
+//            {
+//                int mirroredY = p1.y - (y - p0.y);
+//                RGB tempColor = get_color(x, y);
+//                set_color(x, y, get_color(x, mirroredY));
+//                set_color(x, mirroredY, tempColor);
+//            }
+//        }
+//    }
     return;
 }
 

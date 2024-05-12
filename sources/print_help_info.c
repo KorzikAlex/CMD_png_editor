@@ -6,7 +6,7 @@
 #include "../include/add_operations.h"
 
 /* вывод информации об изображении */
-void print_info(char *input_file, struct Png *png) {
+void print_info(char *input_file, Png *png) {
     printf("Information about PNG file \"%s\":\n", input_file);
 
     printf("Width: %d\n", png->width);
@@ -27,17 +27,17 @@ void print_help() {
          "-i, --input <argument> - set input file name\n"
          " -o, --output <argument> - set output file name\n"
          "--line <arguments> - set line drawing mode\n"
-         "\t--start <argument> - set start point of line\n"
-         "\t--end <argument> - set end point of line\n"
-         "\t--color <argument> - set color of line\n"
+         "\t--start <x.y> - set start point of line\n"
+         "\t--end <x.y> - set end point of line\n"
+         "\t--color <r.g.b> - set color of line\n"
          "\t --thickness <argument> - set thickness of line\n"
          "--mirror <arguments> - set mirror mode\n"
-         "\t --axis <argument> - set axis of mirror\n"
-         "\t--left_up <argument> - set left_up point of mirror's edge\n"
-         "\t--right_up <argument> - set right_up point of mirror's edge\n"
+         "\t --axis <argument> - set axis of mirror (must me 'x' or 'y')\n"
+         "\t--left_up <x.y> - set left_up point of mirror's edge\n"
+         "\t--right_up <x.y> - set right_up point of mirror's edge\n"
          "--pentagram <arguments> - set pentagram in circle mode\n"
-         "\t--center <argument> - set center point of pentagram\n"
+         "\t--center <x.y> - set center point of pentagram\n"
          "\t--radius <argument> - set radius of pentagram\n"
-         "\t--color <argument> - set color of pentagram\n"
+         "\t--color <r.g.b> - set color of pentagram\n"
          "\t--thickness <argument> - set thickness of pentagram");
 }

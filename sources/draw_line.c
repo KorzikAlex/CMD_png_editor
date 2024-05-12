@@ -8,14 +8,36 @@
 #include "../include/add_operations.h"
 
 /* функция для рисования линия */
-void draw_line(info_line line, struct Png *png) {
+void draw_line(Point p0, Point p1, RGB color, int thickness, Png *png) {
     if (png_get_color_type(png->png_ptr, png->info_ptr) == PNG_COLOR_TYPE_RGB) {
         printf("input file is PNG_COLOR_TYPE_RGB but must be PNG_COLOR_TYPE_RGBA");
+        exit(46);
     } else if (png_get_color_type(png->png_ptr, png->info_ptr) != PNG_COLOR_TYPE_RGBA) {
         printf("color_type of input file must be PNG_COLOR_TYPE_RGBA");
+        exit(46);
     }
-
-    puts("ok");
+    int dx = abs(p1.x - p0.x);
+    int dy = abs(p1.y - p0.y);
+    int sx = (p0.x < p1.x) ? 1 : -1;
+    int sy = (p0.y < p1.y) ? 1 : -1;
+    int err = dx - dy;
+    while (p0.x != p1.x || p0.y != p1.y) {
+        for (int i = -thickness / 2; i <= thickness / 2; i++) {
+            for (int j = -thickness / 2; j <= thickness / 2; j++) {
+                Point p = {p0.x + i, p0.y + j};
+                set_pixel(png, p, color);
+            }
+        }
+        int e2 = 2 * err;
+        if (e2 > -dy) {
+            err -= dy;
+            p0.x += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            p0.y += sy;
+        }
+    }
 }
 
 /* проверка введённых параметров для линии на существование (все ли существуют) */
@@ -64,6 +86,7 @@ void set_start_cords(char *xy, info_line *line) {
         exit(41);
     }
 }
+
 /* функция для задания конечных координат */
 void set_end_cords(char *xy, info_line *line) {
     char *x = strtok(xy, ".");
@@ -89,6 +112,7 @@ void set_end_cords(char *xy, info_line *line) {
         exit(41);
     }
 }
+
 /* функция для задания цвета линии */
 void set_color_line(char *rgb, info_line *line) {
     char *r = strtok(rgb, ".");
@@ -125,6 +149,7 @@ void set_color_line(char *rgb, info_line *line) {
         exit(41);
     }
 }
+
 /* функция для задания толщины линии */
 void set_thickness_line(char *thickness, info_line *line) {
     if (thickness == NULL) {
