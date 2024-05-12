@@ -6,6 +6,9 @@ Important Information
 # sources
 test_code
 objects
+html
+docs/extra
+docs/html
 
 # Makefile
 output.png

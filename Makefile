@@ -5,9 +5,11 @@ SRCDIR = sources
 OBJDIR = objects
 INCDIR = include
 DOCSDIR = docs/html
+DOCSINDEX = ./docs/html/index.html
 
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
+
 EXECUTABLE = cw
 DOXYGEN_CONFIG = Doxyfile
 
@@ -30,6 +32,10 @@ clean_docs:
 	rm -rf $(DOCSDIR)
 
 docs:
-	@doxygen $(DOXYGEN_CONFIG)
+	doxygen $(DOXYGEN_CONFIG)
 
-.PHONY: all clean docs
+docs_view:
+	doxygen $(DOXYGEN_CONFIG)
+	xdg-open $(DOCSINDEX)
+
+.PHONY: all, clean, clean_docs, clean_objects, docs, docs_view
