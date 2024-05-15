@@ -9,35 +9,33 @@
 
 /* функция отражения области */
 void draw_mirror(Point p0, Point p1, char axis, Png *png) {
-//    int width = p1.x - p0.x;
-//    int height = p1.y - p0.y;
-//    if (axis == 'x')
-//    {
-//        for (int y = p0.y; y <= p1.y; ++y)
-//        {
-//            for (int x = p0.x; x < p0.x + width / 2; ++x)
-//            {
-//                int mirroredX = p1.x - (x - p0.x);
-//                RGB tempColor = get_color(x, y);
-//                set_pixel(x, y, get_color(mirroredX, y));
-//                set_color(mirroredX, y, tempColor);
-//            }
-//        }
-//    }
-//    else if (axis == 'y')
-//    {
-//        for (int y = p0.y; y < p0.y + height / 2; ++y)
-//        {
-//            for (int x = p0.x; x <= p1.x; ++x)
-//            {
-//                int mirroredY = p1.y - (y - p0.y);
-//                RGB tempColor = get_color(x, y);
-//                set_color(x, y, get_color(x, mirroredY));
-//                set_color(x, mirroredY, tempColor);
-//            }
-//        }
-//    }
-    return;
+    int width = p1.x - p0.x;
+    int height = p1.y - p0.y;
+    if (axis == 'x') {
+        for (int y = p0.y; y <= p1.y; ++y) {
+            for (int x = p0.x; x < p0.x + width / 2; ++x) {
+                int mirroredX = p1.x - (x - p0.x);
+                RGB tempColor = get_color(x, y, png);
+                RGB newColor = get_color(mirroredX, y, png);
+                set_pixel(x, y, newColor, png);
+                set_pixel(mirroredX, y, tempColor, png);
+            }
+        }
+    }
+    else if (axis == 'y')
+    {
+        for (int y = p0.y; y < p0.y + height / 2; ++y)
+        {
+            for (int x = p0.x; x <= p1.x; ++x)
+            {
+                int mirroredY = p1.y - (x - p0.y);
+                RGB tempColor = get_color(x, y, png);
+                RGB newColor = get_color(x, mirroredY, png);
+                set_pixel(x, y, newColor, png);
+                set_pixel(x, mirroredY, tempColor, png);
+            }
+        }
+    }
 }
 
 int check_mirror(info_mirror *mirror) {

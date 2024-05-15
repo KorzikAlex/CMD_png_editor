@@ -150,19 +150,19 @@ int main(int argc, char *argv[]) {
                 set_right_down(optarg, &mirror);
                 break;
             }
-                /* рисование пентаграмы в круге */
+                /* рисование пентаграммы в круге */
             case 404: {
                 pentagram.p = 1;
                 break;
             }
-                /* радиус круга */
+                /* центр круга */
             case 405: {
-                set_radius(optarg, &pentagram);
+                set_center(optarg, &pentagram);
                 break;
             }
-                /* центр круга */
+                /* радиус круга */
             case 406: {
-                set_center(optarg, &pentagram);
+                set_radius(optarg, &pentagram);
                 break;
             }
         }

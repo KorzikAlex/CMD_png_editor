@@ -24,8 +24,7 @@ void draw_line(Point p0, Point p1, RGB color, int thickness, Png *png) {
     while (p0.x != p1.x || p0.y != p1.y) {
         for (int i = -thickness / 2; i <= thickness / 2; i++) {
             for (int j = -thickness / 2; j <= thickness / 2; j++) {
-                Point p = {p0.x + i, p0.y + j};
-                set_pixel(png, p, color);
+                set_pixel(p0.x + i, p0.y + j, color, png);
             }
         }
         int e2 = 2 * err;

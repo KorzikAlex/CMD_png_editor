@@ -14,8 +14,10 @@ void free_png(Png *png);
 
 void check_color(info_line *line);
 
-void set_pixel(Png *png, Point p, RGB color);
+void set_pixel(int x, int y, RGB color, Png *png);
 
-RGB get_color(Point p, Png *png);
+RGB get_color(int x, int y, Png *png);
+
+void draw_circle(Point p, int radius, RGB color, int thickness, Png *png);
 
 #endif
